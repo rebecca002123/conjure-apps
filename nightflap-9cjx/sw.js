@@ -1,4 +1,4 @@
-const CACHE = "nightflap-9cjx-1785462859046";
+const CACHE = "nightflap-9cjx-1785463147876";
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
