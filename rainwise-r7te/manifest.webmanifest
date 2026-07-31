@@ -1,0 +1,24 @@
+{
+  "name": "Rainwise",
+  "short_name": "Rainwise",
+  "description": "Read the sky and get a real rain forecast — offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0C0A16",
+  "theme_color": "#6FB6FF",
+  "icons": [
+    {
+      "src": "./icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
