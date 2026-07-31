@@ -1,7 +1,7 @@
 {
   "name": "Nightflap",
   "short_name": "Nightflap",
-  "description": "Thread the neon gates. One tap keeps you flying.",
+  "description": "Flap through neon gates and climb the leaderboard.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
