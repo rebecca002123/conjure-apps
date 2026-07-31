@@ -1,7 +1,7 @@
 {
   "name": "Inkpress",
   "short_name": "Inkpress",
-  "description": "Write books in chapters, price them, publish for real money.",
+  "description": "Write chapters, price them, publish anywhere.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
