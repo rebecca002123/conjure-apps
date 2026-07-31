@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>conjure-apps</title>
+<meta name="theme-color" content="#0C0A16">
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;padding:calc(env(safe-area-inset-top,0px) + 40px) 20px 60px;
+    background:#07060D;color:#F3F1FF;
+    font:500 16px/1.4 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    max-width:640px;margin-inline:auto}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.8px;margin:0 0 6px}
+  p.sub{margin:0 0 28px;color:rgba(243,241,255,.5);font-size:14px}
+  .app{display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit;
+    padding:14px;border-radius:20px;background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.1);margin-bottom:10px}
+  .app:active{background:rgba(255,255,255,.1)}
+  .ico{width:52px;height:52px;flex:none;display:grid;place-items:center;font-size:26px;
+    border-radius:15px;background:color-mix(in srgb,var(--a) 26%,transparent);
+    border:1px solid color-mix(in srgb,var(--a) 44%,transparent)}
+  .meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .meta b{font-weight:700;letter-spacing:-.2px}
+  .meta i{font-style:normal;font-size:13px;color:rgba(243,241,255,.55);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .empty{color:rgba(243,241,255,.4);font-size:14px}
+  footer{margin-top:34px;color:rgba(243,241,255,.3);font-size:12px}
+</style></head>
+<body>
+  <h1>Conjured</h1>
+  <p class="sub">Open one on an iPhone, then Share &rarr; Add to Home Screen.</p>
+      <a class="app" href="./nightflap-9cjx/">
+        <span class="ico" style="--a:#8B7CFF">🐤</span>
+        <span class="meta"><b>Nightflap</b><i>Thread the neon gates. One tap keeps you flying.</i></span>
+      </a>
+  <footer>Built with Conjure.</footer>
+</body></html>
