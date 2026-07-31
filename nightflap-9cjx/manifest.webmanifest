@@ -1,0 +1,24 @@
+{
+  "name": "Nightflap",
+  "short_name": "Nightflap",
+  "description": "Thread the neon gates. One tap keeps you flying.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0C0A16",
+  "theme_color": "#8B7CFF",
+  "icons": [
+    {
+      "src": "./icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
