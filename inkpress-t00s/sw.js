@@ -1,4 +1,4 @@
-const CACHE = "inkpress-t00s-1785538560337";
+const CACHE = "inkpress-t00s-1785539284058";
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
