@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Nightflap</title>
-<meta name="description" content="Thread the neon gates. One tap keeps you flying.">
+<meta name="description" content="Flap through neon gates and climb the leaderboard.">
 <meta name="theme-color" content="#8B7CFF">
 <meta name="color-scheme" content="dark">
 <meta name="mobile-web-app-capable" content="yes">
@@ -53,36 +53,69 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .pill{height:44px;min-width:44px;padding:0 15px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:.16em;color:rgba(243,241,255,.62);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;pointer-events:auto;font-family:inherit}
 #score{position:absolute;left:0;right:0;top:calc(var(--safe-top,env(safe-area-inset-top,0px)) + 62px);text-align:center;font-size:66px;font-weight:800;letter-spacing:-.055em;text-shadow:0 0 30px rgba(139,124,255,.45);pointer-events:none;transition:transform .13s cubic-bezier(.2,.8,.2,1)}
 #score.pop{transform:scale(1.16)}
-.panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(var(--safe-top,0px) + 20px) 22px calc(var(--safe-bottom,env(safe-area-inset-bottom,0px)) + 46px);pointer-events:none}
-.card{width:100%;max-width:318px;background:rgba(11,9,21,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:26px 22px 22px;text-align:center}
+.panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(var(--safe-top,0px) + 16px) 22px calc(var(--safe-bottom,env(safe-area-inset-bottom,0px)) + 46px);pointer-events:none}
+.card{width:100%;max-width:318px;background:rgba(11,9,21,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:24px 20px 20px;text-align:center}
+.card.act{pointer-events:auto}
 .t{font-size:29px;font-weight:800;letter-spacing:-.035em}
 .t span{color:#8B7CFF}
 .sub{font-size:13.5px;line-height:1.5;color:rgba(243,241,255,.6);margin-top:11px}
-.big{font-size:74px;font-weight:800;letter-spacing:-.06em;line-height:1;margin:4px 0 2px}
+.big{font-size:58px;font-weight:800;letter-spacing:-.06em;line-height:1;margin:4px 0 2px}
 .lab{font-size:10.5px;letter-spacing:.2em;font-weight:700;color:rgba(243,241,255,.42)}
-.rec{margin-top:10px;font-size:11px;letter-spacing:.16em;font-weight:700;color:#6FE7C0}
-.btn{margin-top:20px;width:100%;height:52px;border:0;border-radius:16px;background:#8B7CFF;color:#0C0A16;font-size:15.5px;font-weight:800;letter-spacing:.02em;pointer-events:auto;font-family:inherit}
+.rec{margin-top:8px;font-size:11px;letter-spacing:.16em;font-weight:700;color:#6FE7C0}
+.rank{margin-top:6px;font-size:11.5px;letter-spacing:.14em;font-weight:700;color:#8B7CFF}
+.btn{margin-top:14px;width:100%;height:52px;border:0;border-radius:16px;background:#8B7CFF;color:#0C0A16;font-size:15.5px;font-weight:800;letter-spacing:.02em;pointer-events:auto;font-family:inherit}
+.btn.alt{background:transparent;border:1px solid rgba(255,255,255,.18);color:rgba(243,241,255,.78);height:46px;font-size:12px;letter-spacing:.16em;margin-top:9px}
 .btn:active{transform:scale(.98)}
+.nrow{display:flex;gap:8px;margin-top:16px}
+input.name{flex:1;min-width:0;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;color:#F3F1FF;font-family:inherit;font-size:15px;font-weight:700;letter-spacing:.1em;text-align:center;text-transform:uppercase;padding:0 10px;pointer-events:auto;-webkit-user-select:text;user-select:text}
+input.name::placeholder{color:rgba(243,241,255,.3);letter-spacing:.14em}
+.save{width:78px;height:48px;flex:0 0 78px;border:0;border-radius:14px;background:rgba(139,124,255,.22);border:1px solid rgba(139,124,255,.5);color:#C9C0FF;font-family:inherit;font-size:11px;font-weight:800;letter-spacing:.14em;pointer-events:auto}
+.board{margin-top:14px;max-height:44vh;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;pointer-events:auto;border-top:1px solid rgba(255,255,255,.1)}
+.row{display:flex;align-items:center;gap:10px;padding:10px 3px;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}
+.rk{width:24px;flex:0 0 24px;text-align:right;font-size:11px;font-weight:800;letter-spacing:.04em;color:rgba(243,241,255,.36)}
+.nm{flex:1;min-width:0;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;letter-spacing:.04em}
+.sc{font-weight:800;letter-spacing:-.02em;font-size:16px}
+.row.me{color:#6FE7C0}
+.row.me .rk{color:rgba(111,231,192,.65)}
+.row.p1 .sc{color:#FF9B6A}
+.empty{padding:22px 0;font-size:13px;color:rgba(243,241,255,.45)}
 .hidden{display:none}
 </style></head><body><div id="app"><canvas id="c"></canvas><div id="vig"></div>
-<div id="hud"><button class="pill" id="mute">SOUND</button><div class="pill" id="best">BEST 0</div></div>
+<div id="hud"><button class="pill" id="mute">SOUND</button><button class="pill" id="best">BEST 0</button></div>
 <div id="score">0</div>
-<div class="panel" id="readyP"><div class="card"><div class="t">NIGHT<span>FLAP</span></div><div class="sub" id="readySub">Tap anywhere to flap. Thread the neon gates and don&rsquo;t clip a thing.</div></div></div>
+<div class="panel" id="readyP"><div class="card"><div class="t">NIGHT<span>FLAP</span></div><div class="sub" id="readySub">Tap anywhere to flap. Thread the neon gates and don&rsquo;t clip a thing.</div><button class="btn alt" id="openB1">LEADERBOARD</button></div></div>
 <div class="panel hidden" id="pauseP"><div class="card"><div class="t">Paused</div><div class="sub">Tap anywhere to resume.</div></div></div>
-<div class="panel hidden" id="overP"><div class="card"><div class="lab">GATES CLEARED</div><div class="big" id="oScore">0</div><div class="sub" id="oBest">Best 0</div><div class="rec hidden" id="oRec">NEW RECORD</div><button class="btn" id="again">FLY AGAIN</button></div></div>
+<div class="panel hidden" id="overP"><div class="card act"><div class="lab">GATES CLEARED</div><div class="big" id="oScore">0</div><div class="sub" id="oBest">Best 0</div><div class="rank" id="oRank"></div><div class="rec hidden" id="oRec">NEW RECORD</div><div class="nrow"><input class="name" id="nameIn" placeholder="PILOT" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="save" id="saveN">SAVE</button></div><button class="btn" id="again">FLY AGAIN</button><button class="btn alt" id="openB2">LEADERBOARD</button></div></div>
+<div class="panel hidden" id="boardP"><div class="card act"><div class="t">LEADER<span>BOARD</span></div><div class="board" id="bList"></div><button class="btn" id="closeB">CLOSE</button><button class="btn alt" id="clearB">CLEAR BOARD</button></div></div>
 </div><script>
 (function(){
 var app=document.getElementById('app'),cv=document.getElementById('c'),ctx=cv.getContext('2d');
 var scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),muteBtn=document.getElementById('mute');
-var readyP=document.getElementById('readyP'),readySub=document.getElementById('readySub'),pauseP=document.getElementById('pauseP'),overP=document.getElementById('overP');
-var oScore=document.getElementById('oScore'),oBest=document.getElementById('oBest'),oRec=document.getElementById('oRec'),again=document.getElementById('again');
+var readyP=document.getElementById('readyP'),readySub=document.getElementById('readySub'),pauseP=document.getElementById('pauseP'),overP=document.getElementById('overP'),boardP=document.getElementById('boardP');
+var oScore=document.getElementById('oScore'),oBest=document.getElementById('oBest'),oRec=document.getElementById('oRec'),oRank=document.getElementById('oRank'),again=document.getElementById('again');
+var nameIn=document.getElementById('nameIn'),saveN=document.getElementById('saveN'),bList=document.getElementById('bList');
+var openB1=document.getElementById('openB1'),openB2=document.getElementById('openB2'),closeB=document.getElementById('closeB'),clearB=document.getElementById('clearB');
 var S={get:function(k,d){try{if(window.Conjure)return Conjure.get(k,d);var v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{if(window.Conjure)Conjure.set(k,v);else localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 function hap(k){try{if(window.Conjure&&!muted)Conjure.haptic(k)}catch(e){}}
 var best=S.get('flap.best',0),muted=S.get('flap.muted',false),seen=S.get('flap.seen',false);
+var board=S.get('flap.board',[]);if(!board||!board.length&&!(board instanceof Array))board=[];if(!(board instanceof Array))board=[];
+var pilot=S.get('flap.pilot','')||'';var myEntry=null,boardOpen=false,clearArm=0;
 bestEl.textContent='BEST '+best;muteBtn.textContent=muted?'MUTED':'SOUND';
+nameIn.value=pilot;
 var ac=null;
 function ensure(){if(muted)return;if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){ac=null}}if(ac&&ac.state==='suspended')ac.resume()}
 function beep(f1,f2,dur,type,vol){if(muted)return;ensure();if(!ac)return;var t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+dur);g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+dur+0.03)}
+function clean(v){v=(v||'').toUpperCase().replace(/[^A-Z0-9 .'-]/g,'').replace(/\s+/g,' ').trim();return v.slice(0,12)}
+function sortBoard(){board.sort(function(a,b){return (b.s-a.s)||(a.t-b.t)})}
+function saveBoard(){S.set('flap.board',board)}
+function renderBoard(){while(bList.firstChild)bList.removeChild(bList.firstChild);if(!board.length){var e=document.createElement('div');e.className='empty';e.textContent='No flights logged yet.';bList.appendChild(e);return}
+for(var i=0;i<board.length;i++){var en=board[i],r=document.createElement('div');r.className='row'+(en===myEntry?' me':'')+(i===0?' p1':'');
+var a=document.createElement('div');a.className='rk';a.textContent=(i+1)+'';
+var b=document.createElement('div');b.className='nm';b.textContent=en.n||'PILOT';
+var c=document.createElement('div');c.className='sc';c.textContent=en.s+'';
+r.appendChild(a);r.appendChild(b);r.appendChild(c);bList.appendChild(r)}}
+function openBoard(){boardOpen=true;clearArm=0;clearB.textContent='CLEAR BOARD';renderBoard();boardP.classList.remove('hidden');if(state==='play')pause();hap('light')}
+function closeBoard(){boardOpen=false;boardP.classList.add('hidden')}
 var W=1,H=1,s=1,dpr=1,groundH=60,pipeW=60,bTot=1;
 var state='ready',bird={x:0,y:0,vy:0,rot:0,flap:0},pipes=[],score=0,scroll=0,parts=[],stars=[],bldg=[],deadAt=0,tt=0;
 function spd(){return (168+Math.min(62,score*3))*s}
@@ -95,7 +128,12 @@ function reset(){bird={x:W*0.3,y:H*0.42,vy:0,rot:0,flap:0};pipes=[];parts=[];sco
 function start(){if(state!=='ready')return;state='play';readyP.classList.add('hidden');if(!seen){seen=true;S.set('flap.seen',true)}addPipe(W+80*s);addPipe(W+80*s+spd()*1.3);flap()}
 function flap(){bird.vy=-518*s;bird.flap=1;for(var i=0;i<4;i++)parts.push({x:bird.x-12*s,y:bird.y+6*s,vx:(-40-Math.random()*70)*s,vy:(10+Math.random()*70)*s,l:1,r:(1.6+Math.random()*3)*s,c:'139,124,255'});beep(520,900,0.085,'triangle',0.13);hap('light')}
 function die(){state='fall';beep(190,58,0.36,'sawtooth',0.2);hap('heavy');for(var i=0;i<16;i++)parts.push({x:bird.x,y:bird.y,vx:(Math.random()-0.5)*420*s,vy:(Math.random()-0.7)*380*s,l:1,r:(1.5+Math.random()*3.4)*s,c:'255,155,106'})}
-function finish(){state='dead';deadAt=performance.now();var rec=score>best;if(rec){best=score;S.set('flap.best',best);bestEl.textContent='BEST '+best}oScore.textContent=score;oBest.textContent='Best '+best;oRec.classList.toggle('hidden',!rec);overP.classList.remove('hidden');if(rec)beep(660,1180,0.3,'triangle',0.14)}
+function finish(){state='dead';deadAt=performance.now();var rec=score>best;if(rec){best=score;S.set('flap.best',best);bestEl.textContent='BEST '+best}
+myEntry={n:pilot||'PILOT',s:score,t:Date.now()};board.push(myEntry);sortBoard();if(board.length>60)board.length=60;saveBoard();
+var rk=board.indexOf(myEntry)+1;oRank.textContent=rk?('RANK #'+rk+' OF '+board.length):'';
+oScore.textContent=score;oBest.textContent='Best '+best;oRec.classList.toggle('hidden',!rec);
+nameIn.value=pilot;saveN.textContent='SAVE';
+overP.classList.remove('hidden');if(rec)beep(660,1180,0.3,'triangle',0.14)}
 function hitTest(){var r=12.5*s;if(bird.y+r>H-groundH)return true;for(var i=0;i<pipes.length;i++){var p=pipes[i];if(bird.x+r*0.85>p.x&&bird.x-r*0.85<p.x+pipeW){if(bird.y-r<p.gy||bird.y+r>p.gy+p.gap)return true}}return false}
 function update(dt){tt+=dt;var i,p;
 for(i=parts.length-1;i>=0;i--){p=parts[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=420*s*dt;p.l-=dt*1.7;if(p.l<=0)parts.splice(i,1)}
@@ -135,9 +173,15 @@ var last=0,raf=0;
 function frame(t){raf=requestAnimationFrame(frame);if(!last)last=t;var dt=Math.min(50,t-last)/1000;last=t;if(state!=='paused')update(dt);draw()}
 function pause(){if(state==='play'){state='paused';pauseP.classList.remove('hidden')}}
 function resume(){if(state==='paused'){state='play';pauseP.classList.add('hidden');last=0}}
-app.addEventListener('pointerdown',function(e){if(e.target.closest&&e.target.closest('button'))return;e.preventDefault();ensure();if(state==='ready')start();else if(state==='play')flap();else if(state==='paused')resume();else if(state==='dead'&&performance.now()-deadAt>700){overP.classList.add('hidden');reset()}},{passive:false});
-again.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();overP.classList.add('hidden');reset();hap('medium')},{passive:false});
-muteBtn.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();muted=!muted;S.set('flap.muted',muted);muteBtn.textContent=muted?'MUTED':'SOUND';if(!muted){ensure();beep(700,900,0.08,'triangle',0.1)}},{passive:false});
+app.addEventListener('pointerdown',function(e){var tg=e.target;if(tg&&tg.closest&&tg.closest('button,input,.act'))return;if(boardOpen)return;e.preventDefault();ensure();if(state==='ready')start();else if(state==='play')flap();else if(state==='paused')resume();else if(state==='dead'&&performance.now()-deadAt>700){overP.classList.add('hidden');reset()}},{passive:false});
+function tap(el,fn){el.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();fn()},{passive:false})}
+tap(again,function(){nameIn.blur();overP.classList.add('hidden');reset();hap('medium')});
+tap(saveN,function(){pilot=clean(nameIn.value);S.set('flap.pilot',pilot);nameIn.value=pilot;if(myEntry){myEntry.n=pilot||'PILOT';saveBoard()}nameIn.blur();saveN.textContent='SAVED';hap('light');beep(720,980,0.08,'triangle',0.09);setTimeout(function(){saveN.textContent='SAVE'},1100)});
+tap(openB1,openBoard);tap(openB2,function(){nameIn.blur();openBoard()});
+tap(bestEl,function(){openBoard()});
+tap(closeB,function(){closeBoard();hap('light')});
+tap(clearB,function(){if(!clearArm){clearArm=1;clearB.textContent='TAP AGAIN TO CLEAR';hap('medium');setTimeout(function(){if(clearArm){clearArm=0;clearB.textContent='CLEAR BOARD'}},3000);return}clearArm=0;board=[];myEntry=null;saveBoard();clearB.textContent='CLEAR BOARD';renderBoard();hap('heavy');beep(300,120,0.2,'sawtooth',0.12)});
+nameIn.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();pilot=clean(nameIn.value);S.set('flap.pilot',pilot);nameIn.value=pilot;if(myEntry){myEntry.n=pilot||'PILOT';saveBoard()}nameIn.blur()}});
 document.addEventListener('visibilitychange',function(){if(document.hidden)pause()});
 window.addEventListener('blur',pause);
 window.addEventListener('resize',function(){resize()});
