@@ -1,0 +1,146 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Nightflap</title>
+<meta name="description" content="Thread the neon gates. One tap keeps you flying.">
+<meta name="theme-color" content="#8B7CFF">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nightflap">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<link rel="icon" type="image/png" href="./icon-512.png">
+<script>
+// Register the worker that makes this work offline. Failure is not fatal — the app
+// still runs, it just needs a connection the first time after an update.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  });
+}
+// Standalone mode has no back button and no address bar. Swallow the rubber-band
+// scroll so a full-screen game doesn't drag the whole page around.
+document.addEventListener('touchmove', function (e) {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+</script>
+<style>
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
+  html, body { margin: 0; padding: 0; height: 100%; overscroll-behavior: none; }
+  body {
+    background: #0C0A16;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  input, textarea { -webkit-user-select: text; user-select: text; }
+</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no"><title>Nightflap</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0C0A16;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:#F3F1FF}
+#app{position:fixed;inset:0;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(125% 85% at 50% 38%,transparent 42%,rgba(0,0,0,.6))}
+#hud{position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:calc(var(--safe-top,env(safe-area-inset-top,0px)) + 10px) calc(var(--safe-right,env(safe-area-inset-right,0px)) + 14px) 0 calc(var(--safe-left,env(safe-area-inset-left,0px)) + 14px);pointer-events:none}
+.pill{height:44px;min-width:44px;padding:0 15px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:.16em;color:rgba(243,241,255,.62);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:22px;pointer-events:auto;font-family:inherit}
+#score{position:absolute;left:0;right:0;top:calc(var(--safe-top,env(safe-area-inset-top,0px)) + 62px);text-align:center;font-size:66px;font-weight:800;letter-spacing:-.055em;text-shadow:0 0 30px rgba(139,124,255,.45);pointer-events:none;transition:transform .13s cubic-bezier(.2,.8,.2,1)}
+#score.pop{transform:scale(1.16)}
+.panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(var(--safe-top,0px) + 20px) 22px calc(var(--safe-bottom,env(safe-area-inset-bottom,0px)) + 46px);pointer-events:none}
+.card{width:100%;max-width:318px;background:rgba(11,9,21,.78);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:26px 22px 22px;text-align:center}
+.t{font-size:29px;font-weight:800;letter-spacing:-.035em}
+.t span{color:#8B7CFF}
+.sub{font-size:13.5px;line-height:1.5;color:rgba(243,241,255,.6);margin-top:11px}
+.big{font-size:74px;font-weight:800;letter-spacing:-.06em;line-height:1;margin:4px 0 2px}
+.lab{font-size:10.5px;letter-spacing:.2em;font-weight:700;color:rgba(243,241,255,.42)}
+.rec{margin-top:10px;font-size:11px;letter-spacing:.16em;font-weight:700;color:#6FE7C0}
+.btn{margin-top:20px;width:100%;height:52px;border:0;border-radius:16px;background:#8B7CFF;color:#0C0A16;font-size:15.5px;font-weight:800;letter-spacing:.02em;pointer-events:auto;font-family:inherit}
+.btn:active{transform:scale(.98)}
+.hidden{display:none}
+</style></head><body><div id="app"><canvas id="c"></canvas><div id="vig"></div>
+<div id="hud"><button class="pill" id="mute">SOUND</button><div class="pill" id="best">BEST 0</div></div>
+<div id="score">0</div>
+<div class="panel" id="readyP"><div class="card"><div class="t">NIGHT<span>FLAP</span></div><div class="sub" id="readySub">Tap anywhere to flap. Thread the neon gates and don&rsquo;t clip a thing.</div></div></div>
+<div class="panel hidden" id="pauseP"><div class="card"><div class="t">Paused</div><div class="sub">Tap anywhere to resume.</div></div></div>
+<div class="panel hidden" id="overP"><div class="card"><div class="lab">GATES CLEARED</div><div class="big" id="oScore">0</div><div class="sub" id="oBest">Best 0</div><div class="rec hidden" id="oRec">NEW RECORD</div><button class="btn" id="again">FLY AGAIN</button></div></div>
+</div><script>
+(function(){
+var app=document.getElementById('app'),cv=document.getElementById('c'),ctx=cv.getContext('2d');
+var scoreEl=document.getElementById('score'),bestEl=document.getElementById('best'),muteBtn=document.getElementById('mute');
+var readyP=document.getElementById('readyP'),readySub=document.getElementById('readySub'),pauseP=document.getElementById('pauseP'),overP=document.getElementById('overP');
+var oScore=document.getElementById('oScore'),oBest=document.getElementById('oBest'),oRec=document.getElementById('oRec'),again=document.getElementById('again');
+var S={get:function(k,d){try{if(window.Conjure)return Conjure.get(k,d);var v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{if(window.Conjure)Conjure.set(k,v);else localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function hap(k){try{if(window.Conjure&&!muted)Conjure.haptic(k)}catch(e){}}
+var best=S.get('flap.best',0),muted=S.get('flap.muted',false),seen=S.get('flap.seen',false);
+bestEl.textContent='BEST '+best;muteBtn.textContent=muted?'MUTED':'SOUND';
+var ac=null;
+function ensure(){if(muted)return;if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)()}catch(e){ac=null}}if(ac&&ac.state==='suspended')ac.resume()}
+function beep(f1,f2,dur,type,vol){if(muted)return;ensure();if(!ac)return;var t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+dur);g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+dur+0.03)}
+var W=1,H=1,s=1,dpr=1,groundH=60,pipeW=60,bTot=1;
+var state='ready',bird={x:0,y:0,vy:0,rot:0,flap:0},pipes=[],score=0,scroll=0,parts=[],stars=[],bldg=[],deadAt=0,tt=0;
+function spd(){return (168+Math.min(62,score*3))*s}
+function gapH(){return Math.max(138*s,(182-Math.min(44,score*2.2))*s)}
+function buildBg(){stars=[];for(var i=0;i<70;i++)stars.push({x:Math.random(),y:Math.random()*0.82,r:Math.random()*1.3+0.4,a:0.18+Math.random()*0.6,ph:Math.random()*6.28});
+bldg=[];var x=0,tot=W*2+240;while(x<tot){var w=(26+Math.random()*56)*s,h=(48+Math.random()*152)*s,win=[];var n=Math.random()<0.6?3:0;for(var k=0;k<n;k++)win.push({x:(0.2+Math.random()*0.6)*w,y:(0.15+Math.random()*0.65)*h});bldg.push({x:x,w:w,h:h,win:win});x+=w+(6+Math.random()*16)*s}bTot=x}
+function resize(){var r=app.getBoundingClientRect();W=Math.max(200,r.width);H=Math.max(320,r.height);dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);s=H/700;groundH=62*s;pipeW=58*s;buildBg();if(state==='ready'){bird.x=W*0.3;bird.y=H*0.42}}
+function addPipe(x){var g=gapH(),min=H*0.13,max=H-groundH-g-H*0.09;pipes.push({x:x,gy:min+Math.random()*Math.max(10,max-min),gap:g,sc:false})}
+function reset(){bird={x:W*0.3,y:H*0.42,vy:0,rot:0,flap:0};pipes=[];parts=[];score=0;scroll=0;state='ready';scoreEl.textContent='0';readySub.textContent=seen?'Tap anywhere to fly.':'Tap anywhere to flap. Thread the neon gates and don\u2019t clip a thing.';readyP.classList.remove('hidden')}
+function start(){if(state!=='ready')return;state='play';readyP.classList.add('hidden');if(!seen){seen=true;S.set('flap.seen',true)}addPipe(W+80*s);addPipe(W+80*s+spd()*1.3);flap()}
+function flap(){bird.vy=-518*s;bird.flap=1;for(var i=0;i<4;i++)parts.push({x:bird.x-12*s,y:bird.y+6*s,vx:(-40-Math.random()*70)*s,vy:(10+Math.random()*70)*s,l:1,r:(1.6+Math.random()*3)*s,c:'139,124,255'});beep(520,900,0.085,'triangle',0.13);hap('light')}
+function die(){state='fall';beep(190,58,0.36,'sawtooth',0.2);hap('heavy');for(var i=0;i<16;i++)parts.push({x:bird.x,y:bird.y,vx:(Math.random()-0.5)*420*s,vy:(Math.random()-0.7)*380*s,l:1,r:(1.5+Math.random()*3.4)*s,c:'255,155,106'})}
+function finish(){state='dead';deadAt=performance.now();var rec=score>best;if(rec){best=score;S.set('flap.best',best);bestEl.textContent='BEST '+best}oScore.textContent=score;oBest.textContent='Best '+best;oRec.classList.toggle('hidden',!rec);overP.classList.remove('hidden');if(rec)beep(660,1180,0.3,'triangle',0.14)}
+function hitTest(){var r=12.5*s;if(bird.y+r>H-groundH)return true;for(var i=0;i<pipes.length;i++){var p=pipes[i];if(bird.x+r*0.85>p.x&&bird.x-r*0.85<p.x+pipeW){if(bird.y-r<p.gy||bird.y+r>p.gy+p.gap)return true}}return false}
+function update(dt){tt+=dt;var i,p;
+for(i=parts.length-1;i>=0;i--){p=parts[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=420*s*dt;p.l-=dt*1.7;if(p.l<=0)parts.splice(i,1)}
+if(state==='ready'){bird.y=H*0.42+Math.sin(tt*3.2)*8*s;bird.rot=Math.sin(tt*3.2)*0.12;scroll+=60*s*dt;return}
+if(state==='dead'){return}
+if(state==='fall'){bird.vy=Math.min(bird.vy+2100*s*dt,1000*s);bird.y+=bird.vy*dt;bird.rot=Math.min(1.6,bird.rot+4.4*dt);if(bird.y>H+60*s)finish();return}
+var v=spd();scroll+=v*dt;
+bird.vy=Math.min(bird.vy+1900*s*dt,940*s);bird.y+=bird.vy*dt;
+if(bird.y<14*s){bird.y=14*s;if(bird.vy<0)bird.vy=0}
+bird.flap=Math.max(0,bird.flap-dt*4);
+var tr=Math.max(-0.52,Math.min(1.25,bird.vy/(760*s)));bird.rot+=(tr-bird.rot)*Math.min(1,dt*9);
+for(i=pipes.length-1;i>=0;i--){p=pipes[i];p.x-=v*dt;if(!p.sc&&p.x+pipeW<bird.x){p.sc=true;score++;scoreEl.textContent=score;scoreEl.classList.add('pop');setTimeout(function(){scoreEl.classList.remove('pop')},130);beep(680,940,0.09,'square',0.09);hap('light')}if(p.x+pipeW<-20)pipes.splice(i,1)}
+var last=pipes.length?pipes[pipes.length-1]:null;if(!last||last.x<W-v*1.3)addPipe(W+10*s);
+if(hitTest())die()}
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath()}
+function drawBird(){ctx.save();ctx.translate(bird.x,bird.y);ctx.rotate(bird.rot);
+ctx.shadowColor='rgba(255,155,106,.55)';ctx.shadowBlur=18*s;
+var g=ctx.createLinearGradient(0,-12*s,0,12*s);g.addColorStop(0,'#FFC79A');g.addColorStop(1,'#FF8253');ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(0,0,14*s,11*s,0,0,6.2832);ctx.fill();ctx.shadowBlur=0;
+var wa=-0.75+1.5*bird.flap;ctx.save();ctx.translate(-2*s,2*s);ctx.rotate(wa);ctx.fillStyle='rgba(255,255,255,.82)';ctx.beginPath();ctx.ellipse(-3*s,0,9*s,4.4*s,0,0,6.2832);ctx.fill();ctx.restore();
+ctx.fillStyle='#0C0A16';ctx.beginPath();ctx.arc(6*s,-3.4*s,2.5*s,0,6.2832);ctx.fill();ctx.fillStyle='#F3F1FF';ctx.beginPath();ctx.arc(6.8*s,-4.1*s,0.95*s,0,6.2832);ctx.fill();
+ctx.fillStyle='#8B7CFF';ctx.beginPath();ctx.moveTo(12*s,0);ctx.lineTo(20*s,2.4*s);ctx.lineTo(12*s,5*s);ctx.closePath();ctx.fill();ctx.restore()}
+function draw(){var g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0A0817');g.addColorStop(0.55,'#140F2C');g.addColorStop(1,'#241a3d');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+var i,k,b;for(i=0;i<stars.length;i++){var st=stars[i];var sx=(st.x*W-scroll*0.05)%W;if(sx<0)sx+=W;ctx.globalAlpha=st.a*(0.55+0.45*Math.sin(tt*2+st.ph));ctx.fillStyle='#F3F1FF';ctx.beginPath();ctx.arc(sx,st.y*H*0.72,st.r*s,0,6.2832);ctx.fill()}ctx.globalAlpha=1;
+var off=(scroll*0.3)%bTot,base=H-groundH+2;
+for(i=0;i<bldg.length;i++){b=bldg[i];var bx=b.x-off;if(bx+b.w<0)bx+=bTot;if(bx>W)continue;ctx.fillStyle='#0E0B1E';ctx.fillRect(bx,base-b.h,b.w,b.h);ctx.fillStyle='rgba(139,124,255,.22)';ctx.fillRect(bx,base-b.h,b.w,1.2*s);ctx.fillStyle='rgba(255,155,106,.35)';for(k=0;k<b.win.length;k++)ctx.fillRect(bx+b.win[k].x,base-b.h+b.win[k].y,2.6*s,3.4*s)}
+for(i=0;i<pipes.length;i++){var p=pipes[i],gg=ctx.createLinearGradient(p.x,0,p.x+pipeW,0);gg.addColorStop(0,'#151130');gg.addColorStop(0.45,'#241c4e');gg.addColorStop(1,'#0F0C22');ctx.fillStyle=gg;
+ctx.fillRect(p.x,-10,pipeW,p.gy+10);ctx.fillRect(p.x,p.gy+p.gap,pipeW,H-groundH-(p.gy+p.gap));
+ctx.strokeStyle='rgba(139,124,255,.3)';ctx.lineWidth=1;ctx.strokeRect(p.x+0.5,-10,pipeW-1,p.gy+10);ctx.strokeRect(p.x+0.5,p.gy+p.gap,pipeW-1,H-groundH-(p.gy+p.gap));
+ctx.save();ctx.shadowColor='rgba(139,124,255,.8)';ctx.shadowBlur=16*s;ctx.fillStyle='#8B7CFF';ctx.fillRect(p.x-3*s,p.gy-3.4*s,pipeW+6*s,3.4*s);ctx.fillRect(p.x-3*s,p.gy+p.gap,pipeW+6*s,3.4*s);ctx.restore();
+ctx.fillStyle='rgba(139,124,255,.1)';ctx.fillRect(p.x,p.gy,pipeW,p.gap)}
+ctx.fillStyle='#08060F';ctx.fillRect(0,H-groundH,W,groundH);
+ctx.save();ctx.shadowColor='rgba(139,124,255,.6)';ctx.shadowBlur=12*s;ctx.fillStyle='rgba(139,124,255,.55)';ctx.fillRect(0,H-groundH,W,1.6*s);ctx.restore();
+var tick=44*s,to=(scroll*1)%tick;ctx.fillStyle='rgba(255,255,255,.07)';for(var x=-to;x<W;x+=tick)ctx.fillRect(x,H-groundH+12*s,18*s,2*s);
+for(i=0;i<parts.length;i++){var q=parts[i];ctx.globalAlpha=Math.max(0,q.l)*0.75;ctx.fillStyle='rgba('+q.c+',1)';ctx.beginPath();ctx.arc(q.x,q.y,q.r,0,6.2832);ctx.fill()}ctx.globalAlpha=1;
+if(state!=='dead')drawBird()}
+var last=0,raf=0;
+function frame(t){raf=requestAnimationFrame(frame);if(!last)last=t;var dt=Math.min(50,t-last)/1000;last=t;if(state!=='paused')update(dt);draw()}
+function pause(){if(state==='play'){state='paused';pauseP.classList.remove('hidden')}}
+function resume(){if(state==='paused'){state='play';pauseP.classList.add('hidden');last=0}}
+app.addEventListener('pointerdown',function(e){if(e.target.closest&&e.target.closest('button'))return;e.preventDefault();ensure();if(state==='ready')start();else if(state==='play')flap();else if(state==='paused')resume();else if(state==='dead'&&performance.now()-deadAt>700){overP.classList.add('hidden');reset()}},{passive:false});
+again.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();overP.classList.add('hidden');reset();hap('medium')},{passive:false});
+muteBtn.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();muted=!muted;S.set('flap.muted',muted);muteBtn.textContent=muted?'MUTED':'SOUND';if(!muted){ensure();beep(700,900,0.08,'triangle',0.1)}},{passive:false});
+document.addEventListener('visibilitychange',function(){if(document.hidden)pause()});
+window.addEventListener('blur',pause);
+window.addEventListener('resize',function(){resize()});
+resize();reset();raf=requestAnimationFrame(frame);
+})();
+</script></body></html>
