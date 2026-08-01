@@ -1,7 +1,7 @@
 {
   "name": "Inkpress",
   "short_name": "Inkpress",
-  "description": "Write chapters, price them, publish anywhere.",
+  "description": "Write in chapters, then really publish and log real royalties.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
